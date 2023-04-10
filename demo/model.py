@@ -10,7 +10,8 @@ lock = Lock()
 
 
 def get(name):
-    return tf.get_default_graph().get_tensor_by_name('import/' + name + ':0')
+    # return tf.get_default_graph().get_tensor_by_name('import/' + name + ':0')
+    return 'image_tensor:0'
 
 
 def tensorflow_session():
