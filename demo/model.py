@@ -35,6 +35,8 @@ def tensorflow_session(graph_path):
         tf.import_graph_def(graph_def_optimized, name='')
         input_placeholder = tf.placeholder(tf.float32, shape=[None, None, None, None], name='input')
 
+    tf.compat.v1.global_variables_initializer()
+
     # Create a new session with the graph
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True
@@ -284,8 +286,8 @@ def test():
 
 
 # warm start
-# _img, _z = random(1)
-# _z = encode(_img)
+_img, _z = random(1)
+_z = encode(_img)
 print("Warm started tf model")
 
 if __name__ == '__main__':
