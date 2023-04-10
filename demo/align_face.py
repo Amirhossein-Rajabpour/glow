@@ -62,8 +62,8 @@ def align_face(img):
 	    # extract the ROI of the *original* face, then align the face
         # using facial landmarks
         (x, y, w, h) = rect_to_bb(rects[0])
-        faceOrig = imutils.resize(image[y:y + h, x:x + w], width=256)
-        align_img = fa.align(image, gray, rects[0])
+        faceOrig = imutils.resize(img[y:y + h, x:x + w], width=256)
+        align_img = fa.align(img, gray, rects[0])
         align_img = np.array(Image.fromarray(align_img).convert('RGB'))
 
         return align_img, True
