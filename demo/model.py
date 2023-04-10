@@ -109,6 +109,8 @@ else:
 # sess = tensorflow_session()
 # tf.import_graph_def(graph_def_optimized)
 
+print("graph path is: ", graph_path)
+
 sess = tensorflow_session(graph_path)
 
 print("Loaded model")
