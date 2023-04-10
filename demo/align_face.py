@@ -28,8 +28,10 @@ fa = FaceAligner(predictor, desiredFaceWidth=256,
 # Input: numpy array for image with RGB channels
 # Output: (numpy array, face_found)
 def align_face(img):
-    img = img[:, :, ::-1]  # Convert from RGB to BGR format
-    img = imutils.resize(img, width=800)
+    # img = img[:, :, ::-1]  # Convert from RGB to BGR format
+    # img = imutils.resize(img, width=800)
+
+    img = imutils.resize(img, width=800, inter=cv2.INTER_CUBIC)
 
     # detect faces in the grayscale image
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -37,7 +39,9 @@ def align_face(img):
 
     if len(rects) > 0:
         # align the face using facial landmarks
-        align_img = fa.align(img, gray, rects[0])[:, :, ::-1]
+        # align_img = fa.align(img, gray, rects[0])[:, :, ::-1]
+        align_img = fa.align(img, gray, rects[0])
+
         align_img = np.array(Image.fromarray(align_img).convert('RGB'))
         return align_img, True
     else:
