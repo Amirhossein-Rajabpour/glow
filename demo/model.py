@@ -14,13 +14,32 @@ def get(name):
     return 'image_tensor:0'
 
 
-def tensorflow_session():
-    # Init session and params
+# def tensorflow_session():
+#     # Init session and params
+#     config = tf.ConfigProto()
+#     config.gpu_options.allow_growth = True
+#     # Pin GPU to local rank (one GPU per process)
+#     config.gpu_options.visible_device_list = str(0)
+#     sess = tf.Session(config=config)
+#     return sess
+
+def tensorflow_session(graph_path):
+    # Load graph definition from file
+    with tf.gfile.GFile(graph_path, 'rb') as f:
+        graph_def_optimized = tf.GraphDef()
+        graph_def_optimized.ParseFromString(f.read())
+
+    # Create a new graph and import the definition
+    graph = tf.Graph()
+    with graph.as_default():
+        tf.import_graph_def(graph_def_optimized, name='')
+
+    # Create a new session with the graph
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True
-    # Pin GPU to local rank (one GPU per process)
     config.gpu_options.visible_device_list = str(0)
-    sess = tf.Session(config=config)
+    sess = tf.Session(graph=graph, config=config)
+
     return sess
 
 
@@ -82,12 +101,14 @@ else:
         feed_dict[enc_y] = y
         return feed_dict
 
-with tf.gfile.GFile(graph_path, 'rb') as f:
-    graph_def_optimized = tf.GraphDef()
-    graph_def_optimized.ParseFromString(f.read())
+# with tf.gfile.GFile(graph_path, 'rb') as f:
+#     graph_def_optimized = tf.GraphDef()
+#     graph_def_optimized.ParseFromString(f.read())
 
-sess = tensorflow_session()
-tf.import_graph_def(graph_def_optimized)
+# sess = tensorflow_session()
+# tf.import_graph_def(graph_def_optimized)
+
+sess = tensorflow_session(graph_path)
 
 print("Loaded model")
 
@@ -128,10 +149,10 @@ z_proj = (z_manipulate / z_sq_norms).T
 
 
 def run(sess, fetches, feed_dict):
-    with tf.compat.v1.Session() as sess:
-        with lock:
-            # Locked tensorflow so average server response time to user is lower
-            result = sess.run(fetches, feed_dict)
+    # with tf.compat.v1.Session() as sess:
+    with lock:
+        # Locked tensorflow so average server response time to user is lower
+        result = sess.run(fetches, feed_dict)
     return result
 
 
