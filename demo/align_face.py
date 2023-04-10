@@ -28,25 +28,42 @@ fa = FaceAligner(predictor, desiredFaceWidth=256,
 # Input: numpy array for image with RGB channels
 # Output: (numpy array, face_found)
 def align_face(img):
-    # img = img[:, :, ::-1]  # Convert from RGB to BGR format
-    # img = imutils.resize(img, width=800)
+    img = img[:, :, ::-1]  # Convert from RGB to BGR format
+    img = imutils.resize(img, width=800)
 
-    img = imutils.resize(img, width=800, inter=cv2.INTER_CUBIC)
+    # img = imutils.resize(img, width=800, inter=cv2.INTER_CUBIC)
 
     # detect faces in the grayscale image
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    rects = detector(gray, 2)
+    # rects = detector(gray, 2)
+    # detect faces in the grayscale image
+    rects = detector.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+
 
     if len(rects) > 0:
-        # align the face using facial landmarks
+        # # align the face using facial landmarks
         # align_img = fa.align(img, gray, rects[0])[:, :, ::-1]
-        align_img = fa.align(img, gray, rects[0])
+        # # align_img = fa.align(img, gray, rects[0])
 
-        align_img = np.array(Image.fromarray(align_img).convert('RGB'))
-        return align_img, True
+        # align_img = np.array(Image.fromarray(align_img).convert('RGB'))
+
+        aligned_faces = []
+
+        # loop over the face detections
+        for (x, y, w, h) in rects:
+            # get the facial landmarks
+            rect = dlib.rectangle(int(x), int(y), int(x + w), int(y + h))
+            shape = predictor(gray, rect)
+            face_aligned = fa.align(image, gray, rect)
+            aligned_faces.append(face_aligned)
+
+        # return align_img, True
+        return aligned_faces[0], True
+
     else:
         # No face found
         return None, False
+
 
 # Input: img_path
 # Output: aligned_img if face_found, else None
