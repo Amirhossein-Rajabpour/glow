@@ -156,7 +156,6 @@ def run(sess, fetches, feed_dict):
     with sess.as_default():
         with sess.graph.as_default():
             with lock:
-                print([n.name for n in tf.get_default_graph().as_graph_def().node])
                 # Locked tensorflow so average server response time to user is lower
                 result = sess.run(fetches, feed_dict)
     return result
