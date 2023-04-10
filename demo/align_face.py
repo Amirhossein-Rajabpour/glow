@@ -3,6 +3,7 @@
 
 # import the necessary packages
 from imutils.face_utils import FaceAligner
+from imutils.face_utils import rect_to_bb
 from PIL import Image
 import numpy as np
 # import argparse
