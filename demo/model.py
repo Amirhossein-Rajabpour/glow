@@ -277,8 +277,8 @@ def test():
 
 
 # warm start
-_img, _z = random(1)
-_z = encode(_img)
+# _img, _z = random(1)
+# _z = encode(_img)
 print("Warm started tf model")
 
 if __name__ == '__main__':
