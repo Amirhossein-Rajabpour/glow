@@ -151,9 +151,11 @@ z_proj = (z_manipulate / z_sq_norms).T
 
 def run(sess, fetches, feed_dict):
     # with tf.compat.v1.Session() as sess:
-    with lock:
-        # Locked tensorflow so average server response time to user is lower
-        result = sess.run(fetches, feed_dict)
+    with sess.as_default():
+        with sess.graph.as_default():
+            with lock:
+            # Locked tensorflow so average server response time to user is lower
+            result = sess.run(fetches, feed_dict)
     return result
 
 
