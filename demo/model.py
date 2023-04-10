@@ -33,6 +33,7 @@ def tensorflow_session(graph_path):
     graph = tf.Graph()
     with graph.as_default():
         tf.import_graph_def(graph_def_optimized, name='')
+        input_placeholder = tf.placeholder(tf.float32, shape=[None, None, None, None], name='input')
 
     # Create a new session with the graph
     config = tf.ConfigProto()
