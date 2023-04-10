@@ -42,10 +42,10 @@ def align_face(img):
 
     if len(rects) > 0:
         # align the face using facial landmarks
-        align_img = fa.align(img, gray, rects[0])[:, :, ::-1]
+        # align_img = fa.align(img, gray, rects[0])[:, :, ::-1]
         # align_img = fa.align(img, gray, rects[0])
 
-        align_img = np.array(Image.fromarray(align_img).convert('RGB'))
+        # align_img = np.array(Image.fromarray(align_img).convert('RGB'))
 
         # aligned_faces = []
 
@@ -56,6 +56,14 @@ def align_face(img):
         #     shape = predictor(gray, rect)
         #     face_aligned = fa.align(image, gray, rect)
         #     aligned_faces.append(face_aligned)
+
+        # Another method:
+	    # extract the ROI of the *original* face, then align the face
+        # using facial landmarks
+        (x, y, w, h) = rect_to_bb(rects[0])
+        faceOrig = imutils.resize(image[y:y + h, x:x + w], width=256)
+        align_img = fa.align(image, gray, rects[0])
+        align_img = np.array(Image.fromarray(align_img).convert('RGB'))
 
         return align_img, True
         # return aligned_faces[0], True
