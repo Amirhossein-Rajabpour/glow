@@ -176,7 +176,7 @@ def encode(img):
     if len(img.shape) == 3:
         img = np.expand_dims(img, 0)
     bs = img.shape[0]
-    assert img.shape[1:] == (256, 256, 3)
+    # assert img.shape[1:] == (256, 256, 3)
     feed_dict = {enc_x: img}
 
     update_feed(feed_dict, bs)  # For unoptimized model
